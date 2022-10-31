@@ -1,0 +1,36 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.preprocessing import LabelEncoder,MinMaxScaler
+from sklearn.model_selection import train_test_split
+data = pd.read_csv('/content/drive/MyDrive/IBM PROJECT/assignment 2/Churn_Modelling.csv')
+data = data.iloc[:,3:]
+data
+for col in data.columns:
+  if(data.dtypes[col]=='int64' or data.dtypes[col]=='float64' ):
+    sns.boxplot(x=data[col]).set( xlabel=col)
+    plt.show()
+    sns.FacetGrid(data,hue='Exited',size=5).map(plt.scatter,"Balance","CreditScore").add_legend()
+plt.show()
+sns.pairplot(data, hue='Exited', height=2)
+data.describe()
+data.isnull().sum()
+CreditsMedian = data.loc[data['CreditScore']<400, 'CreditScore'].median()
+ProdMedian = data.loc[data['NumOfProducts']>=3.5,'NumOfProducts'].median()
+
+data.loc[data.CreditScore < 400, 'CreditScore'] = np.nan
+data.fillna(CreditsMedian,inplace=True)
+data.loc[data.NumOfProducts > 3, 'NumOfProducts'] = np.nan
+data.fillna(ProdMedian,inplace=True)
+labelencoder = LabelEncoder()
+data['Geography']= labelencoder.fit_transform(data['Geography'])
+data['Gender'] = labelencoder.fit_transform(data['Gender'])
+independent = data.iloc[:, :-1]
+dependent = data.iloc[:,-1:]
+nm =MinMaxScaler()
+N_independent = nm.fit_transform(independent)
+xtrain,xtest,ytrain,ytest=train_test_split(N_independent,dependent,test_size=0.3)
+print(xtrain,xtest,ytrain,ytest)
+xtrain,xtest,ytrain,ytest=train_test_split(N_independent,dependent,test_size=0.3)
+print(xtrain,xtest,ytrain,ytest)
