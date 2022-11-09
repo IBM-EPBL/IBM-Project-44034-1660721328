@@ -1,0 +1,25 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from sklearn import metrics
+from sklearn.metrics import classification_report,confusion_matrix
+import warnings
+warnings.filterwarnings(action="ignore")
+%matplotlib inline
+pd.set_option("display.max_rows", 1000) 
+pd.set_option("display.max_columns", 1000)
+fires = pd.read_csv("forestfires.csv")    #reading the dataset
+fires.head(15)    #show the first 15 instances of dataset
+#show the last 10 instances of dataset
+fires.tail(10)
+#generate descriptive statistics of each attribute
+fires.describe().T
+#given area of land burnt, but we have to predict if there is fire or not so changing values of area to 0 and 1 only
+#here 0 represet there is not fire and 1 represent fire, changing all values of area which are greater than 0 to 1
+fires['area'].values[fires['area'].values > 0] = 1
+
+#renaming the area attribute to output for clear understanding
+fires = fires.rename(columns={'area': 'output'})
+fires.head(5)
+#Compute pairwise correlation of columns
+fires.corr()
